@@ -52,10 +52,11 @@ service:
 ingress:
   enabled: false
   annotations: {}
-  path: /
+  defaultPath: '/'
   ## Ingress Host
   # hosts:
-  # - phpldapadmin.example.org
+  # - host: phpldapadmin.example.org
+  #   path: / ## Defaults to ingress.defaultPath
   #
   tls: []
   # tls:

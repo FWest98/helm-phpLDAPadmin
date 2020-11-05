@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "phpldapadmin.fullname" . -}}
-{{- $ingressPath := .Values.ingress.path -}}
-apiVersion: extensions/v1beta1
+{{- $defaultPath := .Values.ingress.defaultPath -}}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -10,10 +10,12 @@ metadata:
     chart: {{ template "phpldapadmin.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+
 {{- with .Values.ingress.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
 {{- end }}
+
 spec:
 {{- if .Values.ingress.tls }}
   tls:
@@ -25,14 +27,18 @@ spec:
       secretName: {{ .secretName }}
   {{- end }}
 {{- end }}
+
   rules:
   {{- range .Values.ingress.hosts }}
-    - host: {{ . }}
+    - host: {{ .host }}
       http:
         paths:
-          - path: {{ $ingressPath }}
+          - path: {{ default $defaultPath .path | squote }}
+            pathType: ImplementationSpecific
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
   {{- end }}
 {{- end }}
