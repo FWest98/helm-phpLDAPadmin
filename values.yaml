@@ -4,10 +4,10 @@
 # Declare variables to be passed into your templates.
 
 ## TODO: add this in the deployment.yaml
-env:
+config: |
   # PHPLDAPADMIN_LDAP_HOSTS: ...
-  PHPLDAPADMIN_HTTPS: "false"
-  PHPLDAPADMIN_TRUST_PROXY_SSL: "true"
+  PHPLDAPADMIN_HTTPS: false
+  PHPLDAPADMIN_TRUST_PROXY_SSL: true
 
 ## Number of phpLDAPadmin images
 replicaCount: 1
@@ -16,7 +16,7 @@ replicaCount: 1
 ##
 image:
   repository: osixia/phpldapadmin
-  tag: 0.7.1
+  tag: 0.9.0
   pullPolicy: IfNotPresent
 
 

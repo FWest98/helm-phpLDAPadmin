@@ -29,24 +29,32 @@ spec:
         - name: http
           containerPort: 80
           protocol: TCP
-        envFrom:
-        - configMapRef:
-            name: {{ template "phpldapadmin.fullname" . }}
+        volumeMounts:
+          - name: config
+            mountPath: /container/environment/01-custom
         livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 12 }}
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
         readinessProbe:
-{{ toYaml .Values.readinessProbe | indent 12 }}
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
         resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
+          {{- toYaml .Values.resources | nindent 10 }}
+
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.affinity }}
       affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.tolerations }}
       tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      volumes:
+        - name: config
+          configMap:
+            name: {{ template "phpldapadmin.fullname" . }}
